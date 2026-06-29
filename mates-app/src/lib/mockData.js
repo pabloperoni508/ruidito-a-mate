@@ -6,7 +6,7 @@ export const categories = [
   { id: "mates", name: "Mates" },
   { id: "bombillas", name: "Bombillas" },
   { id: "termos", name: "Termos" },
-  { id: "yerberas", name: "Yerberas" },
+  { id: "accesorios", name: "Accesorios" },
 ];
 
 export const products = [
@@ -67,7 +67,7 @@ export const products = [
     id: "7",
     name: "Yerbera Cuero Grande",
     description: "Yerbera de cuero con tapa, capacidad para medio kilo de yerba.",
-    categoryId: "yerberas",
+    categoryId: "accesorios",
     status: "sin_stock",
     images: ["https://picsum.photos/seed/yerbera1/600/600"],
   },
