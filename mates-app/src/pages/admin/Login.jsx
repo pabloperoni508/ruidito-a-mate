@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
   const { signIn } = useAuth();
@@ -17,7 +17,7 @@ function Login() {
     try {
       await signIn(email, password);
       navigate("/admin");
-    } catch (err) {
+    } catch {
       setError("Email o contraseña incorrectos.");
     } finally {
       setLoading(false);

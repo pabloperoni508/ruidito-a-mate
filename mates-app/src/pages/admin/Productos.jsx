@@ -90,7 +90,7 @@ function Productos() {
       }
       handleCancel();
       refetch();
-    } catch (err) {
+    } catch {
       setFormError("Ocurrió un error. Intentá de nuevo.");
     } finally {
       setSaving(false);
