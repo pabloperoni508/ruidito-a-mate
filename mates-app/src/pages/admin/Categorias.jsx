@@ -29,7 +29,7 @@ function Categorias() {
       setName("");
       setEditing(null);
       refetch();
-    } catch (err) {
+    } catch {
       setFormError("Ocurrió un error. Intentá de nuevo.");
     } finally {
       setSaving(false);

@@ -10,6 +10,7 @@ import Rifas from "./pages/Rifas";
 import Login from "./pages/admin/Login";
 import Categorias from "./pages/admin/Categorias";
 import Productos from "./pages/admin/Productos";
+import EditarProducto from "./pages/admin/EditarProducto";
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/catalogo/:id" element={<ProductoDetalle />} />
           <Route path="/rifas" element={<Rifas />} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="productos/:id/editar" element={<EditarProducto />} />
         </Route>
 
         {/* Login (sin layout de admin) */}

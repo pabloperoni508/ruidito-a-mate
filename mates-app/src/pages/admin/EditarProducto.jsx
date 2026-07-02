@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useFetch } from "../../hooks/useFetch";
 import { getCategories } from "../../services/categoryService";
@@ -10,33 +10,22 @@ import {
 } from "../../services/productService";
 import StateMessage from "../../components/StateMessage";
 
-function EditarProducto() {
-  const { id } = useParams();
+// Formulario interno: recibe product y categories ya cargados.
+// Los useState se inicializan con valores reales desde el primer render,
+// eliminando la necesidad de useEffect para sincronizar estado.
+function FormularioEdicion({ product, categories }) {
   const navigate = useNavigate();
 
-  const { data: product, loading: loadingProduct, error: errorProduct } = useFetch(
-    () => getProductById(id),
-    [id]
-  );
-  const { data: categories, loading: loadingCategories } = useFetch(getCategories, []);
-
-  const [form, setForm] = useState(null);
-  const [images, setImages] = useState([]);
+  const [form, setForm] = useState({
+    name: product.name,
+    description: product.description ?? "",
+    category_id: product.category_id ?? "",
+    status: product.status,
+  });
+  const [images, setImages] = useState(product.images ?? []);
   const [newImages, setNewImages] = useState([]);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState(null);
-
-  useEffect(() => {
-    if (product) {
-      setForm({
-        name: product.name,
-        description: product.description ?? "",
-        category_id: product.category_id ?? "",
-        status: product.status,
-      });
-      setImages(product.images ?? []);
-    }
-  }, [product]);
 
   function handleField(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -62,7 +51,7 @@ function EditarProducto() {
       const removed = (product.images ?? []).filter((url) => !images.includes(url));
       await Promise.all(removed.map((url) => deleteProductImage(url)));
       const finalImages = [...images, ...uploadedUrls];
-      await updateProduct(id, { ...form, images: finalImages });
+      await updateProduct(product.id, { ...form, images: finalImages });
       navigate("/admin/productos");
     } catch {
       setFormError("Ocurrió un error. Intentá de nuevo.");
@@ -71,20 +60,9 @@ function EditarProducto() {
     }
   }
 
-  if (loadingProduct || loadingCategories) {
-    return <StateMessage type="loading" message="Cargando producto..." />;
-  }
-
-  if (errorProduct || !product || !form) {
-    return <StateMessage type="error" message="No se pudo cargar el producto." />;
-  }
-
   return (
     <section className="space-y-6">
-      <Link
-        to="/admin/productos"
-        className="text-sm text-brand-brown font-medium"
-      >
+      <Link to="/admin/productos" className="text-sm text-brand-brown font-medium">
         ← Volver a productos
       </Link>
 
@@ -123,7 +101,7 @@ function EditarProducto() {
             className="w-full border border-brand-gray rounded-xl px-4 py-3 focus:outline-none focus:border-brand-brown bg-brand-white"
           >
             <option value="">Sin categoría</option>
-            {(categories ?? []).map((cat) => (
+            {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
@@ -201,6 +179,31 @@ function EditarProducto() {
       </form>
     </section>
   );
+}
+
+// Componente contenedor: solo se encarga de cargar los datos.
+// Cuando ambos están listos, renderiza el formulario.
+function EditarProducto() {
+  const { id } = useParams();
+
+  const { data: product, loading: loadingProduct, error: errorProduct } = useFetch(
+    () => getProductById(id),
+    [id]
+  );
+  const { data: categories, loading: loadingCategories, error: errorCategories } = useFetch(
+    getCategories,
+    []
+  );
+
+  if (loadingProduct || loadingCategories) {
+    return <StateMessage type="loading" message="Cargando producto..." />;
+  }
+
+  if (errorProduct || errorCategories || !product) {
+    return <StateMessage type="error" message="No se pudo cargar el producto." />;
+  }
+
+  return <FormularioEdicion product={product} categories={categories} />;
 }
 
 export default EditarProducto;
