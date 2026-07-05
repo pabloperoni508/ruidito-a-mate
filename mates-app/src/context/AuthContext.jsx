@@ -1,7 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/SupabaseClient";
+import { AuthContext } from "./AuthContextInstance";
 
-export const AuthContext = createContext(null);
+export { AuthContext } from "./AuthContextInstance";
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(undefined);

@@ -14,6 +14,8 @@ export async function getProducts() {
 }
 
 export async function getProductById(id) {
+  console.log("getProductById llamado con id:", id);
+  console.trace(); // muestra el stack completo
   const { data, error } = await supabase
     .from("products")
     .select("*, categories(name)")

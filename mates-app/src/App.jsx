@@ -16,20 +16,15 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        {/* Rutas públicas */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Inicio />} />
           <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/catalogo/:id" element={<ProductoDetalle />} />
           <Route path="/rifas" element={<Rifas />} />
-          <Route path="productos" element={<Productos />} />
-          <Route path="productos/:id/editar" element={<EditarProducto />} />
         </Route>
 
-        {/* Login (sin layout de admin) */}
         <Route path="/admin/login" element={<Login />} />
 
-        {/* Rutas protegidas del admin */}
         <Route
           path="/admin"
           element={
@@ -41,6 +36,7 @@ function App() {
           <Route index element={<Categorias />} />
           <Route path="categorias" element={<Categorias />} />
           <Route path="productos" element={<Productos />} />
+          <Route path="productos/:id/editar" element={<EditarProducto />} />
         </Route>
       </Routes>
     </AuthProvider>
