@@ -43,6 +43,7 @@ function ProductoDetalle() {
             src={product.images[activeImage]}
             alt={product.name}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         ) : (
           <span className="text-sm text-brand-brown-light">Sin imagen</span>
@@ -66,6 +67,7 @@ function ProductoDetalle() {
                 src={image}
                 alt={`${product.name} ${index + 1}`}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </button>
           ))}
