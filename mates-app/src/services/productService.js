@@ -1,8 +1,5 @@
 import { supabase } from "../lib/SupabaseClient";
 
-// Se incluye la categoría relacionada (categories(name)) en la misma consulta
-// para evitar una segunda llamada a la base de datos por cada producto.
-
 export async function getProducts() {
   const { data, error } = await supabase
     .from("products")
@@ -14,8 +11,6 @@ export async function getProducts() {
 }
 
 export async function getProductById(id) {
-  console.log("getProductById llamado con id:", id);
-  console.trace(); // muestra el stack completo
   const { data, error } = await supabase
     .from("products")
     .select("*, categories(name)")

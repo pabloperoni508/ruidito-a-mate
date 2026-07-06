@@ -11,6 +11,7 @@ import Login from "./pages/admin/Login";
 import Categorias from "./pages/admin/Categorias";
 import Productos from "./pages/admin/Productos";
 import EditarProducto from "./pages/admin/EditarProducto";
+import RifasAdmin from "./pages/admin/Rifas";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="categorias" element={<Categorias />} />
           <Route path="productos" element={<Productos />} />
           <Route path="productos/:id/editar" element={<EditarProducto />} />
+          <Route path="rifas" element={<RifasAdmin />} />
         </Route>
       </Routes>
     </AuthProvider>

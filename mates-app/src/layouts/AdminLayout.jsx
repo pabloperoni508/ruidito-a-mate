@@ -4,6 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 const navItems = [
   { label: "Categorías", to: "/admin/categorias" },
   { label: "Productos", to: "/admin/productos" },
+  { label: "Rifas", to: "/admin/rifas" },
 ];
 
 function AdminLayout() {
@@ -14,6 +15,7 @@ function AdminLayout() {
     await signOut();
     navigate("/admin/login");
   }
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-brand-white">
@@ -54,5 +56,6 @@ function AdminLayout() {
     </div>
   );
 }
+
 
 export default AdminLayout;
