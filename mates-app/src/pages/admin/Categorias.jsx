@@ -7,7 +7,7 @@ import {
   deleteCategory,
 } from "../../services/categoryService";
 import StateMessage from "../../components/StateMessage";
-import { isValidName, NAME_ERROR } from "../../utils/validations";
+import { isValidName, NAME_ERROR } from "../../utils/validation";
 
 function Categorias() {
   const { data: categories, loading, error, refetch } = useFetch(getCategories, []);

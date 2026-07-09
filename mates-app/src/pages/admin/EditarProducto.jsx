@@ -9,7 +9,7 @@ import {
   deleteProductImage,
 } from "../../services/productService";
 import StateMessage from "../../components/StateMessage";
-import { isValidName, NAME_ERROR } from "../../utils/validations";
+import { isValidName, NAME_ERROR } from "../../utils/validation";
 
 // Formulario interno: recibe product y categories ya cargados.
 // Los useState se inicializan con valores reales desde el primer render,
