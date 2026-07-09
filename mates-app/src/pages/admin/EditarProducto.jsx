@@ -9,6 +9,7 @@ import {
   deleteProductImage,
 } from "../../services/productService";
 import StateMessage from "../../components/StateMessage";
+import { isValidName, NAME_ERROR } from "../../utils/validations";
 
 // Formulario interno: recibe product y categories ya cargados.
 // Los useState se inicializan con valores reales desde el primer render,
@@ -42,6 +43,10 @@ function FormularioEdicion({ product, categories }) {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!form.name.trim()) return;
+    if (!isValidName(form.name)) {
+      setFormError(NAME_ERROR);
+      return;
+    }
     setSaving(true);
     setFormError(null);
     try {

@@ -11,6 +11,7 @@ import {
   updateProduct,
 } from "../../services/productService";
 import { groupByCategory } from "../../utils/groupByCategory";
+import { isValidName, NAME_ERROR } from "../../utils/validation";
 import StatusBadge from "../../components/StatusBadge";
 import StateMessage from "../../components/StateMessage";
 
@@ -31,6 +32,14 @@ function Productos() {
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState({});
+
+  function toggleCategory(categoryName) {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [categoryName]: !prev[categoryName],
+    }));
+  }
 
   function handleField(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -50,6 +59,10 @@ function Productos() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!form.name.trim()) return;
+    if (!isValidName(form.name)) {
+      setFormError(NAME_ERROR);
+      return;
+    }
     setSaving(true);
     setFormError(null);
     try {
@@ -204,63 +217,76 @@ function Productos() {
       {products.length === 0 ? (
         <StateMessage type="empty" message="No hay productos todavía." />
       ) : (
-        <div className="space-y-8">
-          {groupByCategory(products, categories ?? []).map(({ categoryName, items }) => (
-            <div key={categoryName}>
-              <h2 className="text-sm font-semibold text-brand-brown-light uppercase tracking-wide mb-3">
-                {categoryName}
-              </h2>
-              <ul className="space-y-3">
-                {items.map((product) => (
-                  <li
-                    key={product.id}
-                    className="flex items-center gap-4 border border-brand-gray rounded-xl px-4 py-3"
-                  >
-                    <div className="w-14 h-14 rounded-lg bg-brand-gray overflow-hidden flex-shrink-0 flex items-center justify-center">
-                      {product.images?.[0] ? (
-                        <img
-                          src={product.images[0]}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xs text-brand-brown-light">—</span>
-                      )}
-                    </div>
+        <div className="space-y-3">
+          {groupByCategory(products, categories ?? []).map(({ categoryName, items }) => {
+            const isExpanded = expandedCategories[categoryName] ?? false;
+            return (
+              <div key={categoryName} className="border border-brand-gray rounded-2xl overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => toggleCategory(categoryName)}
+                  className="w-full flex items-center justify-between px-4 py-3 text-left"
+                >
+                  <span className="font-semibold">{categoryName}</span>
+                  <span className="text-sm text-brand-brown-light">
+                    {items.length} producto{items.length !== 1 ? "s" : ""}{" "}
+                    {isExpanded ? "▲" : "▼"}
+                  </span>
+                </button>
 
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{product.name}</p>
-                      <StatusBadge status={product.status} />
-                    </div>
+                {isExpanded && (
+                  <ul className="border-t border-brand-gray divide-y divide-brand-gray">
+                    {items.map((product) => (
+                      <li key={product.id} className="p-4 space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-14 h-14 rounded-lg bg-brand-gray overflow-hidden flex-shrink-0 flex items-center justify-center">
+                            {product.images?.[0] ? (
+                              <img
+                                src={product.images[0]}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <span className="text-xs text-brand-brown-light">—</span>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium truncate">{product.name}</p>
+                            <StatusBadge status={product.status} />
+                          </div>
+                        </div>
 
-                    <div className="flex flex-col gap-1 items-end flex-shrink-0">
-                      <button
-                        type="button"
-                        onClick={() => navigate(`/admin/productos/${product.id}/editar`)}
-                        className="text-sm text-brand-brown font-medium"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleStatus(product)}
-                        className="text-xs text-brand-brown-light"
-                      >
-                        {product.status === "disponible" ? "Marcar sin stock" : "Marcar disponible"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(product)}
-                        className="text-sm text-brand-red font-medium"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+                        <div className="grid grid-cols-3 gap-2">
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/admin/productos/${product.id}/editar`)}
+                            className="py-2.5 rounded-xl bg-brand-brown/10 text-brand-brown text-sm font-medium"
+                          >
+                            Editar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleToggleStatus(product)}
+                            className="py-2.5 rounded-xl bg-brand-gray text-brand-brown-dark text-sm font-medium"
+                          >
+                            {product.status === "disponible" ? "Sin stock" : "Disponible"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(product)}
+                            className="py-2.5 rounded-xl bg-brand-red/10 text-brand-red text-sm font-medium"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </section>

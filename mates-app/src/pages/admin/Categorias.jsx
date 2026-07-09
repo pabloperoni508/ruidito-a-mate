@@ -7,6 +7,7 @@ import {
   deleteCategory,
 } from "../../services/categoryService";
 import StateMessage from "../../components/StateMessage";
+import { isValidName, NAME_ERROR } from "../../utils/validations";
 
 function Categorias() {
   const { data: categories, loading, error, refetch } = useFetch(getCategories, []);
@@ -18,6 +19,10 @@ function Categorias() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!name.trim()) return;
+    if (!isValidName(name)) {
+      setFormError(NAME_ERROR);
+      return;
+    }
     setSaving(true);
     setFormError(null);
     try {
