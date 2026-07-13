@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "build": "cd mates-app && npm install && npm run build"
+  }
+}
