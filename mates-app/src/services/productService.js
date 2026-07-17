@@ -3,9 +3,8 @@ import { supabase } from "../lib/SupabaseClient";
 export async function getProducts() {
   const { data, error } = await supabase
     .from("products")
-    .select("*, categories(name)")
+    .select("*, categories(name), subcategories(name)")
     .order("created_at", { ascending: false });
-
   if (error) throw error;
   return data;
 }
@@ -13,10 +12,9 @@ export async function getProducts() {
 export async function getProductById(id) {
   const { data, error } = await supabase
     .from("products")
-    .select("*, categories(name)")
+    .select("*, categories(name), subcategories(name)")
     .eq("id", id)
     .single();
-
   if (error) throw error;
   return data;
 }

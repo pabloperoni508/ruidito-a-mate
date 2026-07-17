@@ -14,7 +14,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 bg-brand-white border-b border-brand-gray">
       <nav className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
         <span className="text-lg font-semibold text-brand-brown">
-          Mates Comercio
+          Ruidito a mate
         </span>
         <ul className="flex items-center gap-1">
           {navItems.map((item) => (

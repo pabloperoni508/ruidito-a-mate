@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import { getProducts } from "../services/productService";
 import { getCategories } from "../services/categoryService";
+import { getSubcategories } from "../services/subcategoryService";
 import ProductCard from "../components/ProductCard";
 import CategoryChip from "../components/CategoryChip";
 import StateMessage from "../components/StateMessage";
@@ -9,17 +10,15 @@ import StateMessage from "../components/StateMessage";
 function Catalogo() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get("categoria");
+  const activeSubcategory = searchParams.get("subcategoria");
 
-  const {
-    data: products,
-    loading: loadingProducts,
-    error: errorProducts,
-  } = useFetch(getProducts, []);
-  const {
-    data: categories,
-    loading: loadingCategories,
-    error: errorCategories,
-  } = useFetch(getCategories, []);
+  const { data: products, loading: loadingProducts, error: errorProducts } = useFetch(getProducts, []);
+  const { data: categories, loading: loadingCategories, error: errorCategories } = useFetch(getCategories, []);
+  const { data: allSubcategories } = useFetch(getSubcategories, []);
+
+  const subcategoriesForActive = (allSubcategories ?? []).filter(
+    (s) => s.category_id === activeCategory
+  );
 
   function handleSelectCategory(categoryId) {
     if (categoryId === activeCategory) {
@@ -29,34 +28,34 @@ function Catalogo() {
     }
   }
 
+  function handleSelectSubcategory(subcategoryId) {
+    if (subcategoryId === activeSubcategory) {
+      setSearchParams({ categoria: activeCategory });
+    } else {
+      setSearchParams({ categoria: activeCategory, subcategoria: subcategoryId });
+    }
+  }
+
   if (loadingProducts || loadingCategories) {
     return <StateMessage type="loading" message="Cargando catálogo..." />;
   }
-
   if (errorProducts || errorCategories) {
-    return (
-      <StateMessage
-        type="error"
-        message="No pudimos cargar el catálogo. Intentá de nuevo más tarde."
-      />
-    );
+    return <StateMessage type="error" message="No pudimos cargar el catálogo. Intentá de nuevo más tarde." />;
   }
 
-  const filteredProducts = activeCategory
-    ? products.filter((product) => product.category_id === activeCategory)
-    : products;
+  const filteredProducts = (products ?? []).filter((product) => {
+    if (activeSubcategory) return product.subcategory_id === activeSubcategory;
+    if (activeCategory) return product.category_id === activeCategory;
+    return true;
+  });
 
   return (
     <section className="space-y-6">
       <h1 className="text-2xl font-semibold">Catálogo</h1>
 
       <div className="flex gap-2 overflow-x-auto pb-2">
-        <CategoryChip
-          label="Todos"
-          active={!activeCategory}
-          onClick={() => setSearchParams({})}
-        />
-        {categories.map((category) => (
+        <CategoryChip label="Todos" active={!activeCategory} onClick={() => setSearchParams({})} />
+        {(categories ?? []).map((category) => (
           <CategoryChip
             key={category.id}
             label={category.name}
@@ -66,11 +65,26 @@ function Catalogo() {
         ))}
       </div>
 
+      {activeCategory && subcategoriesForActive.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          <CategoryChip
+            label="Todos"
+            active={!activeSubcategory}
+            onClick={() => setSearchParams({ categoria: activeCategory })}
+          />
+          {subcategoriesForActive.map((sub) => (
+            <CategoryChip
+              key={sub.id}
+              label={sub.name}
+              active={activeSubcategory === sub.id}
+              onClick={() => handleSelectSubcategory(sub.id)}
+            />
+          ))}
+        </div>
+      )}
+
       {filteredProducts.length === 0 ? (
-        <StateMessage
-          type="empty"
-          message="No hay productos en esta categoría todavía."
-        />
+        <StateMessage type="empty" message="No hay productos en esta categoría todavía." />
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {filteredProducts.map((product) => (
