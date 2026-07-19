@@ -60,7 +60,8 @@ function Productos() {
   const { data: allSubcategories } = useFetch(getSubcategories, []);
 
   const [form, setForm] = useState(EMPTY_FORM);
-  const [newImages, setNewImages] = useState([]);
+  const [pendingImages, setPendingImages] = useState([]);
+  const [imageInput, setImageInput] = useState(null);
   const [colors, setColors] = useState([]);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState(null);
@@ -88,17 +89,14 @@ function Productos() {
     }));
   }
 
-  function handleFileChange(e) {
-    setNewImages(Array.from(e.target.files));
-  }
-
   function handleRemoveColor(index) {
     setColors((prev) => prev.filter((_, i) => i !== index));
   }
 
   function handleCancel() {
     setForm(EMPTY_FORM);
-    setNewImages([]);
+    setPendingImages([]);
+    setImageInput(null);
     setColors([]);
     setFormError(null);
     setShowForm(false);
@@ -113,7 +111,7 @@ function Productos() {
     setFormError(null);
     try {
       const uploadedUrls = await Promise.all(
-        newImages.map((file) => uploadProductImage(file))
+        pendingImages.map((file) => uploadProductImage(file))
       );
       await createProduct({
         ...form,
@@ -217,9 +215,49 @@ function Productos() {
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium">Imágenes principales</label>
-            <input type="file" accept="image/*" multiple onChange={handleFileChange}
-              className="w-full text-sm text-brand-brown-light" />
+            <label className="block text-sm font-medium">Imágenes</label>
+
+            {pendingImages.length > 0 && (
+              <div className="flex gap-2 flex-wrap">
+                {pendingImages.map((file, i) => (
+                  <div key={i} className="relative w-20 h-20">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={`foto ${i + 1}`}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPendingImages((prev) => prev.filter((_, idx) => idx !== i))}
+                      className="absolute -top-1 -right-1 w-5 h-5 bg-brand-red text-brand-white rounded-full text-xs flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageInput(e.target.files[0] ?? null)}
+                className="flex-1 text-sm text-brand-brown-light"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (imageInput) {
+                    setPendingImages((prev) => [...prev, imageInput]);
+                    setImageInput(null);
+                  }
+                }}
+                className="bg-brand-brown text-brand-white text-sm font-medium px-4 py-2 rounded-xl"
+              >
+                + Foto
+              </button>
+            </div>
           </div>
 
           <div className="space-y-3">
