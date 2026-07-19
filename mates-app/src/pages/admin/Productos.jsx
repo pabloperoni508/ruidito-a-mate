@@ -29,9 +29,11 @@ function ColorForm({ onAdd }) {
   const [files, setFiles] = useState([]);
   const [saving, setSaving] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!colorName.trim() || files.length === 0) return;
+  async function handleAdd() {
+    if (!colorName.trim() || files.length === 0) {
+      alert("Ingresá un nombre y al menos una foto para el color.");
+      return;
+    }
     setSaving(true);
     try {
       const urls = await Promise.all(files.map((f) => uploadProductImage(f)));
@@ -44,28 +46,30 @@ function ColorForm({ onAdd }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border border-brand-gray rounded-xl p-3 space-y-2">
+    <div className="border border-brand-gray rounded-xl p-3 space-y-2">
       <input
         type="text"
         value={colorName}
         onChange={(e) => setColorName(e.target.value)}
         placeholder="Nombre del color (ej: Rojo)"
-        required
         className="w-full border border-brand-gray rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-brown"
       />
       <input
         type="file"
         accept="image/*"
         multiple
-        required
         onChange={(e) => setFiles(Array.from(e.target.files))}
         className="w-full text-sm text-brand-brown-light"
       />
-      <button type="submit" disabled={saving}
-        className="w-full py-2 bg-brand-brown text-brand-white text-sm font-medium rounded-lg disabled:opacity-50">
+      <button
+        type="button"
+        onClick={handleAdd}
+        disabled={saving}
+        className="w-full py-2 bg-brand-brown text-brand-white text-sm font-medium rounded-lg disabled:opacity-50"
+      >
         {saving ? "Subiendo..." : "Agregar color"}
       </button>
-    </form>
+    </div>
   );
 }
 
