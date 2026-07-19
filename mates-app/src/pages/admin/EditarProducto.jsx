@@ -14,36 +14,28 @@ import StateMessage from "../../components/StateMessage";
 
 function ColorForm({ onAdd }) {
   const [colorName, setColorName] = useState("");
-  const [files, setFiles] = useState([]);
-  const [saving, setSaving] = useState(false);
 
-  async function handleAdd() {
-    if (!colorName.trim() || files.length === 0) {
-      alert("Ingresá un nombre y al menos una foto para el color.");
-      return;
-    }
-    setSaving(true);
-    try {
-      const urls = await Promise.all(files.map((f) => uploadProductImage(f)));
-      onAdd({ name: colorName.trim(), images: urls });
-      setColorName("");
-      setFiles([]);
-    } finally {
-      setSaving(false);
-    }
+  function handleAdd() {
+    if (!colorName.trim()) return;
+    onAdd({ name: colorName.trim(), images: [] });
+    setColorName("");
   }
 
   return (
-    <div className="border border-brand-gray rounded-xl p-3 space-y-2">
-      <input type="text" value={colorName} onChange={(e) => setColorName(e.target.value)}
+    <div className="flex gap-2">
+      <input
+        type="text"
+        value={colorName}
+        onChange={(e) => setColorName(e.target.value)}
         placeholder="Nombre del color (ej: Rojo)"
-        className="w-full border border-brand-gray rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-brown" />
-      <input type="file" accept="image/*" multiple
-        onChange={(e) => setFiles(Array.from(e.target.files))}
-        className="w-full text-sm text-brand-brown-light" />
-      <button type="button" onClick={handleAdd} disabled={saving}
-        className="w-full py-2 bg-brand-brown text-brand-white text-sm font-medium rounded-lg disabled:opacity-50">
-        {saving ? "Subiendo..." : "Agregar color"}
+        className="flex-1 border border-brand-gray rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-brand-brown"
+      />
+      <button
+        type="button"
+        onClick={handleAdd}
+        className="bg-brand-brown text-brand-white text-sm font-medium px-4 py-2.5 rounded-xl"
+      >
+        Agregar
       </button>
     </div>
   );

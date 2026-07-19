@@ -29,7 +29,6 @@ function ProductoDetalle() {
   const currentImages = activeColor !== null
     ? (colors[activeColor]?.images ?? [])
     : (product.images ?? []);
-  const hasImages = currentImages.length > 0;
 
   function handleSelectColor(index) {
     setActiveColor(index === activeColor ? null : index);
@@ -42,26 +41,49 @@ function ProductoDetalle() {
         ← Volver al catálogo
       </Link>
 
-      <div className="aspect-square bg-brand-gray rounded-2xl overflow-hidden flex items-center justify-center">
-        {hasImages ? (
-          <img src={currentImages[activeImage]} alt={product.name}
-            className="w-full h-full object-cover" loading="lazy" />
-        ) : (
-          <span className="text-sm text-brand-brown-light">Sin imagen</span>
-        )}
-      </div>
+      {/* Carrete estilo Instagram */}
+      {currentImages.length > 0 && (
+        <div className="relative aspect-square bg-brand-gray rounded-2xl overflow-hidden">
+          <img
+            src={currentImages[activeImage]}
+            alt={product.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
 
-      {hasImages && currentImages.length > 1 && (
-        <div className="flex gap-2">
-          {currentImages.map((image, index) => (
-            <button key={image} type="button" onClick={() => setActiveImage(index)}
-              className={`w-16 h-16 rounded-lg overflow-hidden border-2 ${
-                index === activeImage ? "border-brand-brown" : "border-transparent"
-              }`}>
-              <img src={image} alt={`${product.name} ${index + 1}`}
-                className="w-full h-full object-cover" loading="lazy" />
-            </button>
-          ))}
+          {/* Flechas */}
+          {currentImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => setActiveImage((prev) => (prev - 1 + currentImages.length) % currentImages.length)}
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center text-lg"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveImage((prev) => (prev + 1) % currentImages.length)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center text-lg"
+              >
+                ›
+              </button>
+
+              {/* Puntos indicadores */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                {currentImages.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setActiveImage(index)}
+                    className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                      index === activeImage ? "bg-white" : "bg-white/50"
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
 
