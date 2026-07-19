@@ -38,7 +38,7 @@ function RafflePopup() {
             <img
               src={activeRaffle.image_url}
               alt={activeRaffle.title}
-              className="w-full object-cover"
+              className="w-full object-cover max-h-[70vh]"
               loading="lazy"
             />
             <button
@@ -48,8 +48,7 @@ function RafflePopup() {
             >
               ×
             </button>
-          </div>
-        ) : (
+          </div>) : (
           <div className="bg-brand-white p-6 space-y-1">
             <button type="button" onClick={handleClose}
               className="absolute top-3 right-3 w-8 h-8 bg-brand-gray rounded-full text-lg flex items-center justify-center">

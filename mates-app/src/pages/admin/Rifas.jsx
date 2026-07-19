@@ -188,8 +188,21 @@ function RaffleCard({ raffle, onRefetch }) {
             {raffle.image_url ? "Cambiar imagen" : "Imagen"}
           </label>
           {raffle.image_url && (
-            <img src={raffle.image_url} alt={raffle.title}
-              className="w-20 h-20 object-cover rounded-lg" loading="lazy" />
+            <div className="relative w-20 h-20">
+              <img
+                src={raffle.image_url}
+                alt={raffle.title}
+                className="w-full h-full object-cover rounded-lg"
+                loading="lazy"
+              />
+              <button
+                type="button"
+                onClick={() => updateRaffle(raffle.id, { image_url: null }).then(onRefetch)}
+                className="absolute -top-1 -right-1 w-5 h-5 bg-brand-red text-brand-white rounded-full text-xs flex items-center justify-center"
+              >
+                ×
+              </button>
+            </div>
           )}
           <input type="file" accept="image/*"
             onChange={(e) => setNewImage(e.target.files[0] ?? null)}

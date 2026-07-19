@@ -121,7 +121,8 @@ function Productos() {
       });
       handleCancel();
       refetch();
-    } catch {
+    } catch (err) {
+      console.error("Error al crear producto:", err);
       setFormError("Ocurrió un error. Intentá de nuevo.");
     } finally {
       setSaving(false);
