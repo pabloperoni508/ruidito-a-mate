@@ -25,42 +25,49 @@ function RafflePopup() {
   if (loading || !activeRaffle || dismissed) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="bg-brand-white rounded-2xl w-full max-w-sm overflow-hidden">
-        {activeRaffle.image_url && (
-          <div className="aspect-video bg-brand-gray">
+    <div
+      className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+      onClick={handleClose}
+    >
+      <div
+        className="relative w-full max-w-sm rounded-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {activeRaffle.image_url ? (
+          <div className="relative">
             <img
               src={activeRaffle.image_url}
               alt={activeRaffle.title}
-              className="w-full h-full object-cover"
+              className="w-full object-cover max-h-[70vh]"
               loading="lazy"
             />
-          </div>
-        )}
-        <div className="p-6 space-y-4">
-          <div className="space-y-1">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="absolute top-3 right-3 w-8 h-8 bg-black/50 text-white rounded-full text-lg flex items-center justify-center"
+            >
+              ×
+            </button>
+          </div>) : (
+          <div className="bg-brand-white p-6 space-y-1">
+            <button type="button" onClick={handleClose}
+              className="absolute top-3 right-3 w-8 h-8 bg-brand-gray rounded-full text-lg flex items-center justify-center">
+              ×
+            </button>
             <h2 className="text-lg font-semibold">{activeRaffle.title}</h2>
             {activeRaffle.description && (
               <p className="text-sm text-brand-brown-dark">{activeRaffle.description}</p>
             )}
           </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleVerRifa}
-              className="flex-1 bg-brand-brown text-brand-white font-semibold py-3 rounded-full"
-            >
-              Ver rifa
-            </button>
-            <button
-              type="button"
-              onClick={handleClose}
-              className="px-5 py-3 rounded-full border border-brand-gray text-brand-brown-dark font-medium"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
+        )}
+
+        <button
+          type="button"
+          onClick={handleVerRifa}
+          className="w-full bg-brand-brown text-brand-white font-semibold py-4 text-base"
+        >
+          Ver rifa
+        </button>
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ function Inicio() {
   return (
     <section className="space-y-10">
       <div className="bg-brand-brown text-brand-white rounded-2xl p-8 text-center">
-        <h1 className="text-2xl font-semibold mb-2">Mates Comercio</h1>
+        <h1 className="text-2xl font-semibold mb-2">Ruidito a mate</h1>
         <p className="text-brand-white/80">
           Los mejores mates y accesorios, hechos para vos.
         </p>
