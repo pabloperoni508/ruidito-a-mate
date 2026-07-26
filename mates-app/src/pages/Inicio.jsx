@@ -35,11 +35,13 @@ function Inicio() {
 
   return (
     <section className="space-y-10">
-      <div className="bg-brand-brown text-brand-white rounded-2xl p-8 text-center">
-        <h1 className="text-2xl font-semibold mb-2">Ruidito a mate</h1>
-        <p className="text-brand-white/80">
-          Los mejores mates y accesorios, hechos para vos.
-        </p>
+      <div className="relative rounded-2xl overflow-hidden h-48">
+        <img
+          src="/logo.png"
+          alt="Ruidito a mate"
+          className="w-full h-full object-contain"
+          loading="lazy"
+        />
       </div>
 
       <div>

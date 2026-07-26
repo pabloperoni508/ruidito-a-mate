@@ -166,11 +166,12 @@ function Rifas() {
       <h1 className="text-2xl font-semibold">Rifa activa</h1>
 
       {raffle.image_url && (
-        <div className="rounded-2xl overflow-hidden bg-brand-gray aspect-video">
+        <div className="relative rounded-2xl overflow-hidden">
           <img
             src={raffle.image_url}
             alt={raffle.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
+            loading="lazy"
           />
         </div>
       )}
