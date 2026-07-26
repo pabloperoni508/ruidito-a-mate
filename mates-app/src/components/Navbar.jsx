@@ -34,7 +34,7 @@ function Navbar() {
             </li>
           ))}
           {activeRaffle && (
-            <li>
+            <li className="hidden sm:block">
               <NavLink
                 to="/rifas"
                 className="ml-1 px-3 py-2 rounded-full text-sm font-medium bg-brand-yellow text-brand-brown-dark"
