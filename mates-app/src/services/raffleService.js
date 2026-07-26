@@ -35,7 +35,17 @@ export async function reserveNumber({ raffleId, number, fullName, phone }) {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    if (error.code === "PGRST116") {
+      throw new Error("numero_tomado");
+    }
+    throw new Error("error_conexion");
+  }
+
+  if (!data) {
+    throw new Error("numero_tomado");
+  }
+
   return data;
 }
 

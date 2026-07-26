@@ -23,14 +23,18 @@ function ReservaModal({ number, raffleId, onClose, onSuccess }) {
     try {
       await reserveNumber({ raffleId, number, fullName: fullName.trim(), phone: phone.trim() });
       onSuccess();
-    } catch {
-      setError("No se pudo reservar el número. Es posible que ya fue tomado.");
+    } catch (err) {
+      if (err.message === "numero_tomado") {
+        setError("Este número ya fue reservado por otra persona. Elegí otro.");
+      } else {
+        setError("Error de conexión. Verificá tu señal e intentá de nuevo.");
+      }
     } finally {
       setSaving(false);
     }
   }
 
-  return (
+  return (  
     <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
       <div className="bg-brand-white rounded-2xl w-full max-w-sm p-6 space-y-5">
         <div className="flex items-center justify-between">
